@@ -3,7 +3,7 @@
 // Writes one line of text (1-240 characters) to /output/entry.txt:
 // a quiet, earned moment of pride for someone in a scene.
 // Pure Node standard library; deterministic; no network, no input.
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { chmodSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 
 const LINE =
   "After forty years of stammering through his own name, he introduced himself to the new neighbours without stopping once.";
@@ -21,6 +21,9 @@ if (LINE.includes("\n")) {
 
 mkdirSync("/output", { recursive: true });
 writeFileSync("/output/entry.txt", LINE, "utf8");
+// The sandbox collects the outputs as another user than the one this
+// program runs as, so leave the file readable by every user.
+chmodSync("/output/entry.txt", 0o644);
 
 // Read back what was written: the gate rejects anything that is not
 // UTF-8 text of 1-240 characters, so fail loudly here instead.
